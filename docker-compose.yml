@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  db:
+    build: ./postgres
+    environment:
+      POSTGRES_USER: lumen
+      POSTGRES_PASSWORD: secret
+
+  web:
+    depends_on:
+      - app
+    image: nginx:alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx:/etc/nginx
+      - ./lumen:/lumen
+
+  app:
+    depends_on:
+      - db
+    build: ./php
+    volumes:
+      - ./php/config:/usr/local/etc
+      - ./php/supervisord.conf:/etc/supervisord.conf
+      - ./lumen:/lumen
