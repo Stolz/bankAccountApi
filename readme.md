@@ -48,3 +48,6 @@ Install Lumen testing dependencies
 Execute automatic tests
 
     docker exec -it bankaccountapi_app_1 ./vendor/bin/phpunit
+
+A [Postman](https://www.getpostman.com/) collection for manual testing can be found at `lumen/Postman_collection.json` file.
+

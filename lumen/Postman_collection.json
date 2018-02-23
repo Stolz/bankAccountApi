@@ -1,0 +1,268 @@
+{
+	"info": {
+		"name": "Bank Account API",
+		"_postman_id": "f5ea0ada-3b7d-8e09-e6ef-c46eca4e1c54",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List all accounts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{baseUrl}}/account",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Create new account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b46e8660-ed01-45cf-a912-800f4bc112c7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.unset(\"accountNumber\");",
+							"",
+							"if(responseCode.code === 201)",
+							"{",
+							"    var response = JSON.parse(responseBody);",
+							"    pm.globals.set(\"accountNumber\", response.number);",
+							"}",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"owner\": \"Mr. {{$guid}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/account",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Get account info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{baseUrl}}/account/{{accountNumber}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account",
+						"{{accountNumber}}"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Close account",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{baseUrl}}/account/{{accountNumber}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account",
+						"{{accountNumber}}"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Deposit amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92aa0008-52b3-476f-9b10-3bf56927339b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 100.5\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/account/{{accountNumber}}/deposit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account",
+						"{{accountNumber}}",
+						"deposit"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Withdrawal amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5332f954-0559-4df5-9aab-c537d4b02f7a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 100.5\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/account/{{accountNumber}}/withdrawal",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account",
+						"{{accountNumber}}",
+						"withdrawal"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer  amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5332f954-0559-4df5-9aab-c537d4b02f7a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"toNumber\": \"{{destinationAccountNumber}}\",\n  \"amount\": 100.5\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/account/{{accountNumber}}/transfer",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"account",
+						"{{accountNumber}}",
+						"transfer"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "37d8bde9-2289-4527-9cc9-96c8d8d16c24",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c87e7f7d-3d7a-40ed-a627-1e218e593736",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "81b5fbbd-9e19-454f-b745-fe43fd78cf41",
+			"key": "baseUrl",
+			"value": "http://localhost",
+			"type": "text"
+		}
+	]
+}
