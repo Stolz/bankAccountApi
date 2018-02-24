@@ -16,20 +16,20 @@ interface AccountTransferLimitService
     /**
      * Register a new account transfer.
      *
-     * @param \App\Models\Account $acount
+     * @param \App\Models\Account $account
      * @param float $amount
      *
      * @return self
      */
-    public function registerTransfer($acount, $amount);
+    public function registerTransfer($account, $amount);
 
     /**
      * Determine whether or not the account daily transfer limit is reached or will be reached.
      *
-     * @param \App\Models\Account $acount
+     * @param \App\Models\Account $account
      * @param float $amount
      *
      * @return bool
      */
-    public function transferDailyLimitExceeded(Account $acount, float $amount): bool;
+    public function transferDailyLimitExceeded(Account $account, float $amount): bool;
 }

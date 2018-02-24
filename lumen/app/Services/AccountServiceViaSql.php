@@ -192,20 +192,20 @@ class AccountServiceViaSql implements AccountService
     /**
      * Transfer amount to another bank account.
      *
-     * @param \App\Models\Account $fromAcount
+     * @param \App\Models\Account $fromAccount
      * @param \App\Models\Account $toAccount
      * @param float $amount
      *
      * @return bool
      * @throws \RuntimeException|\InvalidArgumentException
      */
-    public function transfer(Account $fromAcount, Account $toAccount, float $amount): bool
+    public function transfer(Account $fromAccount, Account $toAccount, float $amount): bool
     {
         // Validate transfer parameters
-        $this->validateTransfer($fromAcount, $toAccount, $amount);
+        $this->validateTransfer($fromAccount, $toAccount, $amount);
 
         // Calculate transfer fee
-        $fee = $this->calculateTransferFee($fromAcount, $toAccount);
+        $fee = $this->calculateTransferFee($fromAccount, $toAccount);
 
         $db = app('db');
         try {
@@ -213,7 +213,7 @@ class AccountServiceViaSql implements AccountService
             $db->beginTransaction();
 
             // Make withdrawal
-            if (! $this->withdrawal($fromAcount, $amount + $fee)) {
+            if (! $this->withdrawal($fromAccount, $amount + $fee)) {
                 throw new \RuntimeException('Unable to withdraw amount from source account');
             }
 
@@ -226,7 +226,7 @@ class AccountServiceViaSql implements AccountService
             $db->commit();
 
             // Register transfer for accounting in daily limit
-            $this->limitService->registerTransfer($fromAcount, $amount);
+            $this->limitService->registerTransfer($fromAccount, $amount);
 
             return true;
         } catch (\Exception $exception) {
@@ -239,14 +239,14 @@ class AccountServiceViaSql implements AccountService
     /**
      * Calculate transfer fee.
      *
-     * @param \App\Models\Account $fromAcount
+     * @param \App\Models\Account $fromAccount
      * @param \App\Models\Account $toAccount
      *
      * @return float
      */
-    public function calculateTransferFee(Account $fromAcount, Account $toAccount): float
+    public function calculateTransferFee(Account $fromAccount, Account $toAccount): float
     {
-        if ($fromAcount->getOwner() === $toAccount->getOwner()) {
+        if ($fromAccount->getOwner() === $toAccount->getOwner()) {
             return 0.0;
         }
 
@@ -256,20 +256,20 @@ class AccountServiceViaSql implements AccountService
     /**
      * Validate transfer.
      *
-     * @param \App\Models\Account $fromAcount
+     * @param \App\Models\Account $fromAccount
      * @param \App\Models\Account $toAccount
      * @param float $amount
      *
      * @return self
      * @throws \RuntimeException|\InvalidArgumentException
      */
-    protected function validateTransfer(Account $fromAcount, Account $toAccount, float $amount)
+    protected function validateTransfer(Account $fromAccount, Account $toAccount, float $amount)
     {
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Invalid amount');
         }
 
-        if ($fromAcount->getNumber() === $toAccount->getNumber()) {
+        if ($fromAccount->getNumber() === $toAccount->getNumber()) {
             throw new \InvalidArgumentException('Source and destination accounts cannot be the same');
         }
 
@@ -277,12 +277,12 @@ class AccountServiceViaSql implements AccountService
         // No need to check if source account has enough balance (including the fee). 'withdrawal' function already handles that
 
         // Check account's daily limit
-        if ($this->limitService->transferDailyLimitExceeded($fromAcount, $amount)) {
+        if ($this->limitService->transferDailyLimitExceeded($fromAccount, $amount)) {
             throw new \RuntimeException('Account daily trasnfer limit reached');
         }
 
         // Request external approval
-        if (! $this->approvalService->approveTransfer($fromAcount, $toAccount, $amount)) {
+        if (! $this->approvalService->approveTransfer($fromAccount, $toAccount, $amount)) {
             throw new \RuntimeException('Transfer not approved');
         }
 

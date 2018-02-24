@@ -71,22 +71,22 @@ interface AccountService
     /**
      * Transfer amount to another bank account.
      *
-     * @param \App\Models\Account $fromAcount
+     * @param \App\Models\Account $fromAccount
      * @param \App\Models\Account $toAccount
      * @param float $amount
      *
      * @return bool
      * @throws \RuntimeException
      */
-    public function transfer(Account $fromAcount, Account $toAccount, float $amount): bool;
+    public function transfer(Account $fromAccount, Account $toAccount, float $amount): bool;
 
     /**
      * Calculate transfer fee.
      *
-     * @param \App\Models\Account $fromAcount
+     * @param \App\Models\Account $fromAccount
      * @param \App\Models\Account $toAccount
      *
      * @return float
      */
-    public function calculateTransferFee(Account $fromAcount, Account $toAccount): float;
+    public function calculateTransferFee(Account $fromAccount, Account $toAccount): float;
 }
