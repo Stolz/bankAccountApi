@@ -6,6 +6,7 @@ use App\Contracts\AccountService;
 use App\Contracts\AccountTransferLimitService;
 use App\Contracts\AccountTransfertApprovalService;
 use App\Models\Account;
+use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Collection;
 use Webpatser\Uuid\Uuid;
 
@@ -26,19 +27,28 @@ class AccountServiceViaSql implements AccountService
     protected $approvalService;
 
     /**
+     * Instance of the service used to interact with database.
+     *
+     * @var \Illuminate\Database\ConnectionResolverInterface
+     */
+    protected $databaseService;
+
+    /**
      * Class constructor.
      *
      * Inject dependencies.
      *
      * @param \App\Contracts\AccountTransferLimitService $limitService
      * @param \App\Contracts\AccountTransfertApprovalService $approvalService
+     * @param \Illuminate\Database\ConnectionResolverInterface $databaseService
      *
      * @return void
      */
-    public function __construct(AccountTransferLimitService $limitService, AccountTransfertApprovalService $approvalService)
+    public function __construct(AccountTransferLimitService $limitService, AccountTransfertApprovalService $approvalService, ConnectionResolverInterface $databaseService)
     {
         $this->limitService = $limitService;
         $this->approvalService = $approvalService;
+        $this->databaseService = $databaseService;
     }
 
     /**
@@ -48,7 +58,7 @@ class AccountServiceViaSql implements AccountService
      */
     protected function query(): \Illuminate\Database\Query\Builder
     {
-        return clone app('db')->table('accounts');
+        return with(clone $this->databaseService)->table('accounts');
     }
 
     /**

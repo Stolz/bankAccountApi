@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\AccountService;
 use App\Contracts\AccountTransferLimitService;
 use App\Contracts\AccountTransfertApprovalService;
+use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,8 +33,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AccountService::class, function () {
             $limitService = app(AccountTransferLimitService::class);
             $approvalService = app(AccountTransfertApprovalService::class);
+            $databaseService = app(ConnectionResolverInterface::class);
 
-            return new \App\Services\AccountServiceViaSql($limitService, $approvalService);
+            return new \App\Services\AccountServiceViaSql($limitService, $approvalService, $databaseService);
         });
     }
 }
