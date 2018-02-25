@@ -217,10 +217,9 @@ class AccountServiceViaSql implements AccountService
         // Calculate transfer fee
         $fee = $this->calculateTransferFee($fromAccount, $toAccount);
 
-        $db = app('db');
         try {
             // Start transaction
-            $db->beginTransaction();
+            $this->databaseService->beginTransaction();
 
             // Make withdrawal
             if (! $this->withdrawal($fromAccount, $amount + $fee)) {
@@ -233,7 +232,7 @@ class AccountServiceViaSql implements AccountService
             }
 
             // Confirm transaction
-            $db->commit();
+            $this->databaseService->commit();
 
             // Register transfer for accounting in daily limit
             $this->limitService->registerTransfer($fromAccount, $amount);
@@ -241,7 +240,7 @@ class AccountServiceViaSql implements AccountService
             return true;
         } catch (\Exception $exception) {
             // Roll back transaction
-            $db->rollBack();
+            $this->databaseService->rollBack();
             throw $exception;
         }
     }
